@@ -1,125 +1,246 @@
-import os
-
-OUTPUT_FOLDER = "outputs"
-
-if not os.path.exists(OUTPUT_FOLDER):
-    os.makedirs(OUTPUT_FOLDER)
-    
 from flask import Flask, jsonify
 from flask_cors import CORS
 
-from config import Config
-from database.mongodb import connect_db
+# ---------------------------------------------------------
+# Database
+# ---------------------------------------------------------
 
-# Import API Blueprints
+from database.mongodb import get_database
+
+
+# ---------------------------------------------------------
+# Routes
+# ---------------------------------------------------------
+
 from routes.assets import assets_bp
 from routes.vulnerabilities import vulnerabilities_bp
 from routes.threats import threats_bp
 from routes.incidents import incidents_bp
 from routes.analytics import analytics_bp
 from routes.dashboard import dashboard_bp
+
+# ML / Prediction routes
+from routes.prediction_routes import prediction_bp
+from routes.anomaly_routes import anomaly_bp
+
+# Export route
 from routes.export import export_bp
-from routes.report import report_bp
-from routes.search import search_bp
-from routes.timeline import timeline_bp
-from routes.dashboard import dashboard_bp
-from routes.heatmap import heatmap_bp
-from routes.top_assets import top_assets_bp
 
 
-def create_app():
-    """
-    Create and configure the Flask application.
-    """
+# =========================================================
+# Flask Application
+# =========================================================
 
-    app = Flask(__name__)
-    app.config.from_object(Config)
+app = Flask(__name__)
 
-    # Enable Cross-Origin Resource Sharing
-    CORS(app)
+# ---------------------------------------------------------
+# CORS
+# ---------------------------------------------------------
 
-    # -----------------------------
-    # Connect to MongoDB
-    # -----------------------------
-    connect_db(app)
-
-    # -----------------------------
-    # Register API Blueprints
-    # -----------------------------
-    app.register_blueprint(assets_bp, url_prefix="/api/assets")
-    app.register_blueprint(vulnerabilities_bp, url_prefix="/api/vulnerabilities")
-    app.register_blueprint(threats_bp, url_prefix="/api/threats")
-    app.register_blueprint(incidents_bp, url_prefix="/api/incidents")
-    app.register_blueprint(analytics_bp, url_prefix="/api/analytics")
-    app.register_blueprint(dashboard_bp, url_prefix="/api/dashboard")
-    app.register_blueprint(export_bp, url_prefix="/api/export")
-    app.register_blueprint(report_bp, url_prefix="/api/report")
-    app.register_blueprint(search_bp, url_prefix="/api/search")
-    app.register_blueprint(timeline_bp, url_prefix="/api/timeline")
-    app.register_blueprint(dashboard_bp, url_prefix="/api/dashboard")
-    app.register_blueprint(heatmap_bp, url_prefix="/api/heatmap")
-    app.register_blueprint(top_assets_bp, url_prefix="/api/top-assets")
-
-    # -----------------------------
-    # Home Route
-    # -----------------------------
-    @app.route("/", methods=["GET"])
-    def home():
-        return jsonify({
-            "project": "AI-Assisted Threat Detection Dashboard",
-            "version": "1.0.0",
-            "status": "Running"
-        })
-
-    # -----------------------------
-    # Health Check
-    # -----------------------------
-    @app.route("/health", methods=["GET"])
-    def health():
-        return jsonify({
-            "status": "Healthy",
-            "database": "MongoDB Connected"
-        })
-
-    # -----------------------------
-    # Run Complete Pipeline
-    # -----------------------------
-    @app.route("/api/pipeline/run", methods=["GET"])
-    def run_pipeline():
-        """
-        Executes the complete pipeline:
-        Data Collection →
-        Data Cleaning →
-        Threat Enrichment →
-        MITRE Mapping →
-        Feature Engineering →
-        MongoDB Storage
-        """
-
-        return jsonify({
-            "message": "Pipeline executed successfully.",
-            "steps": [
-                "Data Collection",
-                "Data Cleaning",
-                "Threat Enrichment",
-                "MITRE Mapping",
-                "Feature Engineering",
-                "MongoDB Storage"
-            ]
-        })
-
-    return app
+CORS(app)
 
 
-# Create Flask App
-app = create_app()
+# ---------------------------------------------------------
+# Application Configuration
+# ---------------------------------------------------------
 
+app.config["JSON_SORT_KEYS"] = False
+
+
+# =========================================================
+# Register Blueprints
+# =========================================================
+
+app.register_blueprint(
+    assets_bp
+)
+
+app.register_blueprint(
+    vulnerabilities_bp
+)
+
+app.register_blueprint(
+    threats_bp
+)
+
+app.register_blueprint(
+    incidents_bp
+)
+
+app.register_blueprint(
+    analytics_bp
+)
+
+app.register_blueprint(
+    dashboard_bp
+)
+
+app.register_blueprint(
+    prediction_bp
+)
+
+app.register_blueprint(
+    anomaly_bp
+)
+
+app.register_blueprint(
+    export_bp
+)
+
+
+# =========================================================
+# Home / API Information
+# =========================================================
+
+@app.route(
+    "/",
+    methods=["GET"]
+)
+def home():
+
+    return jsonify({
+        "success": True,
+        "message": "AI-Assisted Threat Detection Backend",
+        "status": "running",
+        "version": "1.0.0"
+    })
+
+
+# =========================================================
+# Health Check
+# =========================================================
+
+@app.route(
+    "/health",
+    methods=["GET"]
+)
+def health():
+
+    try:
+
+        db = get_database()
+
+        # Test MongoDB connection
+        db.command(
+            "ping"
+        )
+
+        mongodb_status = "connected"
+
+    except Exception as error:
+
+        mongodb_status = (
+            f"disconnected: {str(error)}"
+        )
+
+    return jsonify({
+
+        "success": True,
+
+        "application": "AI-Assisted Threat Detection Dashboard",
+
+        "backend": "running",
+
+        "mongodb": mongodb_status
+
+    })
+
+
+# =========================================================
+# API Health Check
+# =========================================================
+
+@app.route(
+    "/api/health",
+    methods=["GET"]
+)
+def api_health():
+
+    return jsonify({
+
+        "success": True,
+
+        "message": "API is working",
+
+        "services": {
+
+            "api": "running",
+
+            "prediction": "available",
+
+            "anomaly_detection": "available",
+
+            "analytics": "available",
+
+            "mongodb": "configured"
+
+        }
+
+    })
+
+
+# =========================================================
+# Error Handlers
+# =========================================================
+
+@app.errorhandler(404)
+def not_found(error):
+
+    return jsonify({
+
+        "success": False,
+
+        "error": "Endpoint not found",
+
+        "message": "The requested API endpoint does not exist."
+
+    }), 404
+
+
+@app.errorhandler(500)
+def internal_server_error(error):
+
+    return jsonify({
+
+        "success": False,
+
+        "error": "Internal server error",
+
+        "message": "An unexpected server error occurred."
+
+    }), 500
+
+
+# =========================================================
+# Run Application
+# =========================================================
 
 if __name__ == "__main__":
+
+    print("\n" + "=" * 60)
+
+    print(
+        "AI-ASSISTED THREAT DETECTION BACKEND"
+    )
+
+    print("=" * 60)
+
+    print(
+        "Server: http://127.0.0.1:5000"
+    )
+
+    print(
+        "Health: http://127.0.0.1:5000/health"
+    )
+
+    print(
+        "API Health: http://127.0.0.1:5000/api/health"
+    )
+
+    print("=" * 60 + "\n")
+
     app.run(
         host="0.0.0.0",
         port=5000,
-        debug=Config.DEBUG
+        debug=True
     )
-
-

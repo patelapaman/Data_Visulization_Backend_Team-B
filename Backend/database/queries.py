@@ -1,325 +1,637 @@
-from database.mongodb import get_db
-from database.mongodb import db
-from database.mongodb import db
-from database.mongodb import db
-from database.mongodb import db
-from database.mongodb import db
-from database.mongodb import db
-from database.mongodb import db
+from datetime import datetime, timedelta
+
+from database.mongodb import get_database
 
 
-def get_top_targeted_assets_data(limit=10):
-    """
-    Return the most targeted assets.
-    """
-
-    pipeline = [
-
-        {
-            "$group": {
-                "_id": "$asset_id",
-                "attack_count": {"$sum": 1},
-                "highest_severity": {"$max": "$severity"}
-            }
-        },
-
-        {
-            "$sort": {
-                "attack_count": -1
-            }
-        },
-
-        {
-            "$limit": limit
-        },
-
-        {
-            "$project": {
-                "_id": 0,
-                "asset_id": "$_id",
-                "attack_count": 1,
-                "highest_severity": 1
-            }
-        }
-
-    ]
-
-    return list(
-        db.security_events.aggregate(pipeline)
-    )
-
-
-def get_attack_heatmap_data():
-    """
-    Aggregate attack counts grouped by asset.
-    """
-
-    pipeline = [
-        {
-            "$group": {
-                "_id": "$asset_id",
-                "attack_count": {"$sum": 1}
-            }
-        },
-        {
-            "$project": {
-                "_id": 0,
-                "asset_id": "$_id",
-                "attack_count": 1
-            }
-        },
-        {
-            "$sort": {
-                "attack_count": -1
-            }
-        }
-    ]
-
-    return list(
-        db.security_events.aggregate(pipeline)
-    )
-
-
-def get_live_dashboard_data():
-    """
-    Return the latest dashboard statistics.
-    """
-
-    return {
-
-        "total_assets":
-        db.assets.count_documents({}),
-
-        "total_vulnerabilities":
-        db.vulnerabilities.count_documents({}),
-
-        "total_security_events":
-        db.security_events.count_documents({}),
-
-        "total_incidents":
-        db.incident_history.count_documents({}),
-
-        "critical_events":
-        db.security_events.count_documents(
-            {"severity": "Critical"}
-        ),
-
-        "high_events":
-        db.security_events.count_documents(
-            {"severity": "High"}
-        ),
-
-        "last_updated":
-        str(db.security_events.find_one(
-            sort=[("timestamp", -1)]
-        )["timestamp"])
-        if db.security_events.count_documents({}) > 0
-        else "No Data"
-    }
-
-
-def get_threat_timeline():
-    """
-    Return security events ordered by timestamp.
-    """
-
-    events = list(
-        db.security_events.find(
-            {},
-            {
-                "_id": 0,
-                "event_id": 1,
-                "timestamp": 1,
-                "attack_name": 1,
-                "severity": 1,
-                "risk_level": 1,
-                "asset_id": 1
-            }
-        ).sort("timestamp", 1)
-    )
-
-    return events
-
-
-def search_security_events(keyword):
-    """
-    Search security events by multiple fields.
-    """
-
-    query = {
-        "$or": [
-
-            {"event_id": {"$regex": keyword, "$options": "i"}},
-
-            {"asset_id": {"$regex": keyword, "$options": "i"}},
-
-            {"attack_name": {"$regex": keyword, "$options": "i"}},
-
-            {"severity": {"$regex": keyword, "$options": "i"}},
-
-            {"risk_level": {"$regex": keyword, "$options": "i"}},
-
-            {"status": {"$regex": keyword, "$options": "i"}}
-        ]
-    }
-
-    events = list(
-        db.security_events.find(query)
-    )
-
-    for event in events:
-
-        event["_id"] = str(event["_id"])
-
-    return events
-
-
-def get_dashboard_summary():
-
-    return {
-
-        "Total Assets":
-        db.assets.count_documents({}),
-
-        "Total Vulnerabilities":
-        db.vulnerabilities.count_documents({}),
-
-        "Security Events":
-        db.security_events.count_documents({}),
-
-        "Threat Intelligence":
-        db.threat_intelligence.count_documents({}),
-
-        "MITRE Mappings":
-        db.mitre_mapping.count_documents({}),
-
-        "Engineered Features":
-        db.engineered_features.count_documents({})
-    }
-
-
-def get_all_security_events():
-    """
-    Retrieve all security events from MongoDB.
-    """
-
-    collection = db["security_events"]
-
-    data = list(collection.find())
-
-    return data
-
+# =========================================================
+# Database / Collections
+# =========================================================
 
 def get_collection(collection_name):
     """
-    Return all documents from a collection.
+    Return a MongoDB collection.
     """
 
-    db = get_db()
+    db = get_database()
 
-    data = list(
-        db[collection_name].find(
-            {},
-            {"_id": 0}
-        )
+    return db[collection_name]
+
+
+# =========================================================
+# Generic Insert
+# =========================================================
+
+def insert_document(
+    collection_name,
+    document
+):
+    """
+    Insert one document into MongoDB.
+    """
+
+    collection = get_collection(
+        collection_name
     )
 
-    return data
-
-
-def get_assets():
-
-    return get_collection("assets")
-
-
-def get_vulnerabilities():
-
-    return get_collection("vulnerabilities")
-
-
-def get_security_events():
-
-    return get_collection("security_events")
-
-
-def get_incidents():
-
-    return get_collection("incident_history")
-
-
-def get_threats():
-
-    return get_collection("threat_intelligence")
-
-
-def get_mitre():
-
-    return get_collection("mitre_mapping")
-
-
-def get_enriched_events():
-
-    return get_collection("enriched_events")
-
-
-def get_mapped_events():
-
-    return get_collection("mapped_events")
-
-
-def get_features():
-
-    return get_collection("engineered_features")
-
-
-def get_high_risk_assets():
-    """
-    Return assets with High or Critical risk.
-    """
-
-    db = get_db()
-
-    result = list(
-        db["engineered_features"].find(
-            {
-                "risk_category": {
-                    "$in": [
-                        "High",
-                        "Critical"
-                    ]
-                }
-            },
-            {"_id": 0}
-        )
+    result = collection.insert_one(
+        document
     )
 
-    return result
+    return str(
+        result.inserted_id
+    )
 
 
-def get_dashboard_summary():
+def insert_documents(
+    collection_name,
+    documents
+):
     """
-    Generate dashboard statistics.
+    Insert multiple documents.
     """
 
-    db = get_db()
+    if not documents:
+        return []
 
-    summary = {
-        "assets": db["assets"].count_documents({}),
-        "vulnerabilities": db["vulnerabilities"].count_documents({}),
-        "security_events": db["security_events"].count_documents({}),
-        "incidents": db["incident_history"].count_documents({}),
-        "threats": db["threat_intelligence"].count_documents({}),
-        "mapped_events": db["mapped_events"].count_documents({}),
-        "high_risk_assets": db["engineered_features"].count_documents(
-            {
-                "risk_category": {
-                    "$in": [
-                        "High",
-                        "Critical"
-                    ]
-                }
-            }
+    collection = get_collection(
+        collection_name
+    )
+
+    result = collection.insert_many(
+        documents
+    )
+
+    return [
+        str(document_id)
+        for document_id in result.inserted_ids
+    ]
+
+
+# =========================================================
+# Generic Find
+# =========================================================
+
+def find_documents(
+    collection_name,
+    query=None,
+    limit=100
+):
+    """
+    Find documents from MongoDB.
+    """
+
+    collection = get_collection(
+        collection_name
+    )
+
+    query = query or {}
+
+    documents = list(
+        collection.find(
+            query
         )
+        .limit(limit)
+    )
+
+    for document in documents:
+
+        if "_id" in document:
+
+            document["_id"] = str(
+                document["_id"]
+            )
+
+    return documents
+
+
+# =========================================================
+# Assets
+# =========================================================
+
+def get_assets(limit=100):
+    return find_documents(
+        "assets",
+        limit=limit
+    )
+
+
+def get_asset_by_id(asset_id):
+    return find_documents(
+        "assets",
+        {
+            "asset_id": asset_id
+        },
+        limit=1
+    )
+
+
+# =========================================================
+# Vulnerabilities
+# =========================================================
+
+def get_vulnerabilities(limit=100):
+    return find_documents(
+        "vulnerabilities",
+        limit=limit
+    )
+
+
+def get_vulnerabilities_by_asset(
+    asset_id
+):
+    return find_documents(
+        "vulnerabilities",
+        {
+            "asset_id": asset_id
+        },
+        limit=100
+    )
+
+
+# =========================================================
+# Threats
+# =========================================================
+
+def get_threats(limit=100):
+    return find_documents(
+        "threats",
+        limit=limit
+    )
+
+
+def get_threat_by_id(threat_id):
+    return find_documents(
+        "threats",
+        {
+            "threat_id": threat_id
+        },
+        limit=1
+    )
+
+
+# =========================================================
+# Security Events
+# =========================================================
+
+def get_security_events(
+    limit=100
+):
+    return find_documents(
+        "security_events",
+        limit=limit
+    )
+
+
+def get_security_event_by_id(
+    event_id
+):
+    return find_documents(
+        "security_events",
+        {
+            "event_id": event_id
+        },
+        limit=1
+    )
+
+
+# =========================================================
+# Search Security Events
+# =========================================================
+
+def search_security_events(
+    search_text,
+    limit=100
+):
+    """
+    Search event_id, asset_id, threat_id,
+    source_ip, destination_ip, etc.
+    """
+
+    collection = get_collection(
+        "security_events"
+    )
+
+    regex_query = {
+        "$regex": search_text,
+        "$options": "i"
     }
 
+    query = {
+        "$or": [
+            {
+                "event_id": regex_query
+            },
+            {
+                "asset_id": regex_query
+            },
+            {
+                "threat_id": regex_query
+            },
+            {
+                "source_ip": regex_query
+            },
+            {
+                "destination_ip": regex_query
+            },
+            {
+                "event_type": regex_query
+            },
+            {
+                "severity": regex_query
+            }
+        ]
+    }
+
+    documents = list(
+        collection.find(
+            query
+        ).limit(limit)
+    )
+
+    for document in documents:
+
+        document["_id"] = str(
+            document["_id"]
+        )
+
+    return documents
+
+
+# =========================================================
+# Predictions
+# =========================================================
+
+def save_prediction(
+    prediction
+):
+    """
+    Store an ML prediction.
+    """
+
+    return insert_document(
+        "predictions",
+        prediction
+    )
+
+
+def save_predictions(
+    predictions
+):
+    """
+    Store multiple ML predictions.
+    """
+
+    return insert_documents(
+        "predictions",
+        predictions
+    )
+
+
+def get_predictions(
+    limit=100
+):
+    return find_documents(
+        "predictions",
+        limit=limit
+    )
+
+
+def get_prediction_by_event(
+    event_id
+):
+    return find_documents(
+        "predictions",
+        {
+            "event_id": event_id
+        },
+        limit=1
+    )
+
+
+# =========================================================
+# Anomalies
+# =========================================================
+
+def get_anomalies(
+    limit=100
+):
+    """
+    Get suspicious ML anomaly predictions.
+    """
+
+    return find_documents(
+        "predictions",
+        {
+            "anomaly_status": "Suspicious"
+        },
+        limit=limit
+    )
+
+
+# =========================================================
+# Threat Summary
+# =========================================================
+
+def get_threat_summary():
+    """
+    Return counts by risk level.
+    """
+
+    collection = get_collection(
+        "predictions"
+    )
+
+    pipeline = [
+        {
+            "$group": {
+                "_id": "$risk_level",
+                "count": {
+                    "$sum": 1
+                }
+            }
+        }
+    ]
+
+    results = list(
+        collection.aggregate(
+            pipeline
+        )
+    )
+
+    summary = {}
+
+    for result in results:
+
+        summary[
+            result["_id"] or "Unknown"
+        ] = result["count"]
+
     return summary
+
+
+# =========================================================
+# Prediction Statistics
+# =========================================================
+
+def get_prediction_statistics():
+    """
+    Return prediction counts.
+    """
+
+    collection = get_collection(
+        "predictions"
+    )
+
+    pipeline = [
+        {
+            "$group": {
+                "_id": "$prediction",
+                "count": {
+                    "$sum": 1
+                }
+            }
+        }
+    ]
+
+    results = list(
+        collection.aggregate(
+            pipeline
+        )
+    )
+
+    statistics = {}
+
+    for result in results:
+
+        statistics[
+            result["_id"] or "Unknown"
+        ] = result["count"]
+
+    return statistics
+
+
+# =========================================================
+# Threat Timeline
+# =========================================================
+
+def get_threat_timeline(
+    days=7
+):
+    """
+    Return threat activity grouped by date.
+    """
+
+    collection = get_collection(
+        "predictions"
+    )
+
+    start_date = (
+        datetime.utcnow()
+        - timedelta(days=days)
+    )
+
+    pipeline = [
+        {
+            "$match": {
+                "created_at": {
+                    "$gte": start_date
+                }
+            }
+        },
+        {
+            "$group": {
+                "_id": {
+                    "$dateToString": {
+                        "format": "%Y-%m-%d",
+                        "date": "$created_at"
+                    }
+                },
+                "total_events": {
+                    "$sum": 1
+                },
+                "suspicious_events": {
+                    "$sum": {
+                        "$cond": [
+                            {
+                                "$eq": [
+                                    "$prediction",
+                                    "Suspicious"
+                                ]
+                            },
+                            1,
+                            0
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "$sort": {
+                "_id": 1
+            }
+        }
+    ]
+
+    return list(
+        collection.aggregate(
+            pipeline
+        )
+    )
+
+
+# =========================================================
+# Heatmap of Attacks
+# =========================================================
+
+def get_attack_heatmap():
+    """
+    Generate attack counts grouped by
+    day of week and hour.
+    """
+
+    collection = get_collection(
+        "predictions"
+    )
+
+    pipeline = [
+        {
+            "$match": {
+                "created_at": {
+                    "$exists": True
+                }
+            }
+        },
+        {
+            "$project": {
+                "hour": {
+                    "$hour": "$created_at"
+                },
+                "day": {
+                    "$dayOfWeek": "$created_at"
+                },
+                "prediction": 1
+            }
+        },
+        {
+            "$match": {
+                "prediction": "Suspicious"
+            }
+        },
+        {
+            "$group": {
+                "_id": {
+                    "day": "$day",
+                    "hour": "$hour"
+                },
+                "count": {
+                    "$sum": 1
+                }
+            }
+        },
+        {
+            "$sort": {
+                "_id.day": 1,
+                "_id.hour": 1
+            }
+        }
+    ]
+
+    return list(
+        collection.aggregate(
+            pipeline
+        )
+    )
+
+
+# =========================================================
+# Top Targeted Assets
+# =========================================================
+
+def get_top_targeted_assets(
+    limit=10
+):
+    """
+    Find the assets associated with
+    the most suspicious events.
+    """
+
+    collection = get_collection(
+        "predictions"
+    )
+
+    pipeline = [
+        {
+            "$match": {
+                "prediction": "Suspicious",
+                "asset_id": {
+                    "$exists": True
+                }
+            }
+        },
+        {
+            "$group": {
+                "_id": "$asset_id",
+                "attack_count": {
+                    "$sum": 1
+                }
+            }
+        },
+        {
+            "$sort": {
+                "attack_count": -1
+            }
+        },
+        {
+            "$limit": limit
+        }
+    ]
+
+    return list(
+        collection.aggregate(
+            pipeline
+        )
+    )
+
+
+# =========================================================
+# Model Performance
+# =========================================================
+
+def save_model_performance(
+    performance
+):
+    """
+    Save ML model evaluation results.
+    """
+
+    return insert_document(
+        "model_performance",
+        performance
+    )
+
+
+def get_model_performance():
+    """
+    Return latest model performance.
+    """
+
+    collection = get_collection(
+        "model_performance"
+    )
+
+    documents = list(
+        collection.find()
+        .sort(
+            "created_at",
+            -1
+        )
+        .limit(10)
+    )
+
+    for document in documents:
+
+        document["_id"] = str(
+            document["_id"]
+        )
+
+    return documents

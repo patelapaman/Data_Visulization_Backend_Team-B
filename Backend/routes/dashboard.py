@@ -1,6 +1,10 @@
 from flask import Blueprint, jsonify
 
-from services.analytics_service import get_live_dashboard
+from database.queries import (
+    get_dashboard_summary,
+    get_high_risk_assets,
+    get_features
+)
 
 dashboard_bp = Blueprint("dashboard", __name__)
 
@@ -8,12 +12,19 @@ dashboard_bp = Blueprint("dashboard", __name__)
 @dashboard_bp.route("/", methods=["GET"])
 def dashboard():
 
-    data = get_live_dashboard()
+    summary = get_dashboard_summary()
+
+    features = get_features()
+
+    high_risk = get_high_risk_assets()
+
+    dashboard_data = {
+        "summary": summary,
+        "high_risk_assets": high_risk,
+        "feature_count": len(features)
+    }
 
     return jsonify({
-
         "status": "success",
-
-        "data": data
-
+        "data": dashboard_data
     })

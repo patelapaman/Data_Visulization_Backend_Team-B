@@ -1,32 +1,48 @@
+import os
 from pymongo import MongoClient
-from config import Config
+from dotenv import load_dotenv
 
-client = None
-db = None
+load_dotenv()
+
+MONGO_URI = os.getenv("MONGO_URI")
+MONGO_DATABASE = os.getenv("MONGO_DATABASE", "threat_detection")
+
+if not MONGO_URI:
+    raise ValueError("MONGO_URI is not set in the .env file")
+
+# Create MongoDB client
+client = MongoClient(MONGO_URI)
+
+# Select database
+db = client[MONGO_DATABASE]
 
 
-def connect_db(app=None):
-    """
-    Connect to MongoDB.
-    """
-
-    global client, db
-
-    try:
-        client = MongoClient(Config.MONGO_URI)
-
-        db = client[Config.DATABASE_NAME]
-
-        print(f"Connected to MongoDB: {Config.DATABASE_NAME}")
-
-    except Exception as e:
-        print("MongoDB Connection Error")
-        print(e)
+def get_database():
+    """Return the MongoDB database."""
+    return db
 
 
 def get_db():
-    """
-    Return MongoDB database instance.
-    """
-
+    """Backward-compatible alias."""
     return db
+
+
+def connect_db():
+    """Test MongoDB connection."""
+    try:
+        client.admin.command("ping")
+        print("MongoDB connected successfully!")
+        return db
+    except Exception as e:
+        print(f"MongoDB connection failed: {e}")
+        return None
+
+
+def test_connection():
+    """Test whether MongoDB is reachable."""
+    try:
+        client.admin.command("ping")
+        return True
+    except Exception as e:
+        print(f"MongoDB connection failed: {e}")
+        return False
