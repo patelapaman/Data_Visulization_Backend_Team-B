@@ -1,1 +1,377 @@
 2026-08-05 10:52:42,568 | INFO | ThreatDetection | GET /api/analytics/threat-timeline 400 0.14ms request_id=586ce109-ad8a-4468-b073-e1bb3da5b244
+2026-08-06 20:54:18,818 | INFO | ThreatDetection | GET / 200 0.21ms request_id=7c093ab5-0a39-475e-b898-db25ea2d28b2
+2026-08-06 20:54:19,045 | INFO | ThreatDetection | GET /favicon.ico 404 1.57ms request_id=255fa412-c75c-4793-b6bc-0377a5bca33b
+2026-08-06 20:56:19,662 | ERROR | ThreatDetection | Unhandled API error request_id=6e6b22c2-cfb6-4ddd-9451-fe6ecb94061c
+Traceback (most recent call last):
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\OneDrive\Desktop\AI_Assisted_Threat_Detection_MongoDB_Taskwise\Backend\routes\addons.py", line 56, in search_events_api
+    events, total, per_page = search_events(
+                              ^^^^^^^^^^^^^^
+  File "C:\Users\aj\OneDrive\Desktop\AI_Assisted_Threat_Detection_MongoDB_Taskwise\Backend\database\queries.py", line 112, in search_events
+    return list(cursor), db["security_events"].count_documents(event_filter), per_page
+           ^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\cursor.py", line 1166, in __next__
+    return self.next()
+           ^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\cursor.py", line 1142, in next
+    if len(self._data) or self._refresh():
+                          ^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\cursor.py", line 1090, in _refresh
+    self._send_message(q)
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\cursor.py", line 985, in _send_message
+    response = client._run_operation(
+               ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\_csot.py", line 125, in csot_wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\mongo_client.py", line 1956, in _run_operation
+    return self._retryable_read(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\mongo_client.py", line 2076, in _retryable_read
+    return self._retry_internal(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\_csot.py", line 125, in csot_wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\mongo_client.py", line 2038, in _retry_internal
+    ).run()
+      ^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\mongo_client.py", line 2811, in run
+    res = self._read() if self._is_read else self._write()
+          ^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\mongo_client.py", line 3027, in _read
+    self._server = self._get_server()
+                   ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\mongo_client.py", line 2975, in _get_server
+    return self._client._select_server(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\mongo_client.py", line 1851, in _select_server
+    server = topology.select_server(
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\topology.py", line 428, in select_server
+    server = self._select_server(
+             ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\topology.py", line 402, in _select_server
+    servers = self.select_servers(
+              ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\topology.py", line 298, in select_servers
+    server_descriptions = self._select_servers_loop(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\topology.py", line 359, in _select_servers_loop
+    raise ServerSelectionTimeoutError(
+pymongo.errors.ServerSelectionTimeoutError: localhost:27017: [WinError 10061] No connection could be made because the target machine actively refused it (configured timeouts: socketTimeoutMS: 3000.0ms, connectTimeoutMS: 3000.0ms), Timeout: 3.0s, Topology Description: <TopologyDescription id: 6a74a6b7e485400eccd3b6b3, topology_type: Unknown, servers: [<ServerDescription ('localhost', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('localhost:27017: [WinError 10061] No connection could be made because the target machine actively refused it (configured timeouts: socketTimeoutMS: 3000.0ms, connectTimeoutMS: 3000.0ms)')>]>
+2026-08-06 20:56:19,912 | INFO | ThreatDetection | GET /api/events 500 3523.21ms request_id=6e6b22c2-cfb6-4ddd-9451-fe6ecb94061c
+2026-08-06 20:57:03,895 | ERROR | ThreatDetection | Unhandled API error request_id=bbe52e4c-75ad-4f3d-8a29-e2b6cb2d7b50
+Traceback (most recent call last):
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\OneDrive\Desktop\AI_Assisted_Threat_Detection_MongoDB_Taskwise\Backend\routes\addons.py", line 56, in search_events_api
+    events, total, per_page = search_events(
+                              ^^^^^^^^^^^^^^
+  File "C:\Users\aj\OneDrive\Desktop\AI_Assisted_Threat_Detection_MongoDB_Taskwise\Backend\database\queries.py", line 112, in search_events
+    return list(cursor), db["security_events"].count_documents(event_filter), per_page
+           ^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\cursor.py", line 1166, in __next__
+    return self.next()
+           ^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\cursor.py", line 1142, in next
+    if len(self._data) or self._refresh():
+                          ^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\cursor.py", line 1090, in _refresh
+    self._send_message(q)
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\cursor.py", line 985, in _send_message
+    response = client._run_operation(
+               ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\_csot.py", line 125, in csot_wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\mongo_client.py", line 1956, in _run_operation
+    return self._retryable_read(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\mongo_client.py", line 2076, in _retryable_read
+    return self._retry_internal(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\_csot.py", line 125, in csot_wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\mongo_client.py", line 2038, in _retry_internal
+    ).run()
+      ^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\mongo_client.py", line 2811, in run
+    res = self._read() if self._is_read else self._write()
+          ^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\mongo_client.py", line 3027, in _read
+    self._server = self._get_server()
+                   ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\mongo_client.py", line 2975, in _get_server
+    return self._client._select_server(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\mongo_client.py", line 1851, in _select_server
+    server = topology.select_server(
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\topology.py", line 428, in select_server
+    server = self._select_server(
+             ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\topology.py", line 402, in _select_server
+    servers = self.select_servers(
+              ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\topology.py", line 298, in select_servers
+    server_descriptions = self._select_servers_loop(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\topology.py", line 359, in _select_servers_loop
+    raise ServerSelectionTimeoutError(
+pymongo.errors.ServerSelectionTimeoutError: localhost:27017: [WinError 10061] No connection could be made because the target machine actively refused it (configured timeouts: socketTimeoutMS: 3000.0ms, connectTimeoutMS: 3000.0ms), Timeout: 3.0s, Topology Description: <TopologyDescription id: 6a74a6b7e485400eccd3b6b3, topology_type: Unknown, servers: [<ServerDescription ('localhost', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('localhost:27017: [WinError 10061] No connection could be made because the target machine actively refused it (configured timeouts: socketTimeoutMS: 3000.0ms, connectTimeoutMS: 3000.0ms)')>]>
+2026-08-06 20:57:03,924 | INFO | ThreatDetection | GET /api/events 500 3191.75ms request_id=bbe52e4c-75ad-4f3d-8a29-e2b6cb2d7b50
+2026-08-06 20:57:47,758 | ERROR | ThreatDetection | Unhandled API error request_id=bb419d94-692b-4d79-89ae-1b328f3c03ec
+Traceback (most recent call last):
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\OneDrive\Desktop\AI_Assisted_Threat_Detection_MongoDB_Taskwise\Backend\routes\addons.py", line 117, in analytics_overview_api
+    "data": overview_analytics(_filters()),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\OneDrive\Desktop\AI_Assisted_Threat_Detection_MongoDB_Taskwise\Backend\services\addon_service.py", line 166, in overview_analytics
+    "severity": _count_group("severity", event_filter),
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\OneDrive\Desktop\AI_Assisted_Threat_Detection_MongoDB_Taskwise\Backend\services\addon_service.py", line 18, in _count_group
+    return aggregate_events(pipeline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\OneDrive\Desktop\AI_Assisted_Threat_Detection_MongoDB_Taskwise\Backend\database\queries.py", line 116, in aggregate_events
+    return list(get_db()["security_events"].aggregate(pipeline))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\collection.py", line 3038, in aggregate
+    return self._aggregate(
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\_csot.py", line 125, in csot_wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\collection.py", line 2935, in _aggregate
+    return self._database.client._retryable_read(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\mongo_client.py", line 2076, in _retryable_read
+    return self._retry_internal(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\_csot.py", line 125, in csot_wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\mongo_client.py", line 2038, in _retry_internal
+    ).run()
+      ^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\mongo_client.py", line 2811, in run
+    res = self._read() if self._is_read else self._write()
+          ^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\mongo_client.py", line 3027, in _read
+    self._server = self._get_server()
+                   ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\mongo_client.py", line 2975, in _get_server
+    return self._client._select_server(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\mongo_client.py", line 1851, in _select_server
+    server = topology.select_server(
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\topology.py", line 428, in select_server
+    server = self._select_server(
+             ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\topology.py", line 402, in _select_server
+    servers = self.select_servers(
+              ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\topology.py", line 298, in select_servers
+    server_descriptions = self._select_servers_loop(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\topology.py", line 359, in _select_servers_loop
+    raise ServerSelectionTimeoutError(
+pymongo.errors.ServerSelectionTimeoutError: localhost:27017: [WinError 10061] No connection could be made because the target machine actively refused it (configured timeouts: socketTimeoutMS: 3000.0ms, connectTimeoutMS: 3000.0ms), Timeout: 3.0s, Topology Description: <TopologyDescription id: 6a74a6b7e485400eccd3b6b3, topology_type: Unknown, servers: [<ServerDescription ('localhost', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('localhost:27017: [WinError 10061] No connection could be made because the target machine actively refused it (configured timeouts: socketTimeoutMS: 3000.0ms, connectTimeoutMS: 3000.0ms)')>]>
+2026-08-06 20:57:47,929 | INFO | ThreatDetection | GET /api/analytics/overview 500 3303.45ms request_id=bb419d94-692b-4d79-89ae-1b328f3c03ec
+2026-08-06 20:58:09,463 | ERROR | ThreatDetection | Unhandled API error request_id=fd4277fb-2801-46f8-b0a9-579c4a6dac4f
+Traceback (most recent call last):
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\OneDrive\Desktop\AI_Assisted_Threat_Detection_MongoDB_Taskwise\Backend\routes\addons.py", line 149, in top_targeted_assets_api
+    "data": top_targeted_assets(_filters(), limit=limit),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\OneDrive\Desktop\AI_Assisted_Threat_Detection_MongoDB_Taskwise\Backend\services\addon_service.py", line 118, in top_targeted_assets
+    return aggregate_events(pipeline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\OneDrive\Desktop\AI_Assisted_Threat_Detection_MongoDB_Taskwise\Backend\database\queries.py", line 116, in aggregate_events
+    return list(get_db()["security_events"].aggregate(pipeline))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\collection.py", line 3038, in aggregate
+    return self._aggregate(
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\_csot.py", line 125, in csot_wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\collection.py", line 2935, in _aggregate
+    return self._database.client._retryable_read(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\mongo_client.py", line 2076, in _retryable_read
+    return self._retry_internal(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\_csot.py", line 125, in csot_wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\mongo_client.py", line 2038, in _retry_internal
+    ).run()
+      ^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\mongo_client.py", line 2811, in run
+    res = self._read() if self._is_read else self._write()
+          ^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\mongo_client.py", line 3027, in _read
+    self._server = self._get_server()
+                   ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\mongo_client.py", line 2975, in _get_server
+    return self._client._select_server(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\mongo_client.py", line 1851, in _select_server
+    server = topology.select_server(
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\topology.py", line 428, in select_server
+    server = self._select_server(
+             ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\topology.py", line 402, in _select_server
+    servers = self.select_servers(
+              ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\topology.py", line 298, in select_servers
+    server_descriptions = self._select_servers_loop(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\topology.py", line 359, in _select_servers_loop
+    raise ServerSelectionTimeoutError(
+pymongo.errors.ServerSelectionTimeoutError: localhost:27017: [WinError 10061] No connection could be made because the target machine actively refused it (configured timeouts: socketTimeoutMS: 3000.0ms, connectTimeoutMS: 3000.0ms), Timeout: 3.0s, Topology Description: <TopologyDescription id: 6a74a6b7e485400eccd3b6b3, topology_type: Unknown, servers: [<ServerDescription ('localhost', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('localhost:27017: [WinError 10061] No connection could be made because the target machine actively refused it (configured timeouts: socketTimeoutMS: 3000.0ms, connectTimeoutMS: 3000.0ms)')>]>
+2026-08-06 20:58:09,494 | INFO | ThreatDetection | GET /api/analytics/top-targeted-assets 500 3212.13ms request_id=fd4277fb-2801-46f8-b0a9-579c4a6dac4f
+2026-08-06 20:58:19,075 | ERROR | ThreatDetection | Unhandled API error request_id=3ab62aec-220c-45ee-b6d4-8a47ecb9ad6e
+Traceback (most recent call last):
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\OneDrive\Desktop\AI_Assisted_Threat_Detection_MongoDB_Taskwise\Backend\routes\addons.py", line 149, in top_targeted_assets_api
+    "data": top_targeted_assets(_filters(), limit=limit),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\OneDrive\Desktop\AI_Assisted_Threat_Detection_MongoDB_Taskwise\Backend\services\addon_service.py", line 118, in top_targeted_assets
+    return aggregate_events(pipeline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\OneDrive\Desktop\AI_Assisted_Threat_Detection_MongoDB_Taskwise\Backend\database\queries.py", line 116, in aggregate_events
+    return list(get_db()["security_events"].aggregate(pipeline))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\collection.py", line 3038, in aggregate
+    return self._aggregate(
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\_csot.py", line 125, in csot_wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\collection.py", line 2935, in _aggregate
+    return self._database.client._retryable_read(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\mongo_client.py", line 2076, in _retryable_read
+    return self._retry_internal(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\_csot.py", line 125, in csot_wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\mongo_client.py", line 2038, in _retry_internal
+    ).run()
+      ^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\mongo_client.py", line 2811, in run
+    res = self._read() if self._is_read else self._write()
+          ^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\mongo_client.py", line 3027, in _read
+    self._server = self._get_server()
+                   ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\mongo_client.py", line 2975, in _get_server
+    return self._client._select_server(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\mongo_client.py", line 1851, in _select_server
+    server = topology.select_server(
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\topology.py", line 428, in select_server
+    server = self._select_server(
+             ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\topology.py", line 402, in _select_server
+    servers = self.select_servers(
+              ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\topology.py", line 298, in select_servers
+    server_descriptions = self._select_servers_loop(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\topology.py", line 359, in _select_servers_loop
+    raise ServerSelectionTimeoutError(
+pymongo.errors.ServerSelectionTimeoutError: localhost:27017: [WinError 10061] No connection could be made because the target machine actively refused it (configured timeouts: socketTimeoutMS: 3000.0ms, connectTimeoutMS: 3000.0ms), Timeout: 3.0s, Topology Description: <TopologyDescription id: 6a74a6b7e485400eccd3b6b3, topology_type: Unknown, servers: [<ServerDescription ('localhost', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('localhost:27017: [WinError 10061] No connection could be made because the target machine actively refused it (configured timeouts: socketTimeoutMS: 3000.0ms, connectTimeoutMS: 3000.0ms)')>]>
+2026-08-06 20:58:19,092 | INFO | ThreatDetection | GET /api/analytics/top-targeted-assets 500 3185.29ms request_id=3ab62aec-220c-45ee-b6d4-8a47ecb9ad6e
+2026-08-06 20:58:43,319 | ERROR | ThreatDetection | Unhandled API error request_id=a429fb0f-9ef3-46af-8ce7-4855c11eb51d
+Traceback (most recent call last):
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\OneDrive\Desktop\AI_Assisted_Threat_Detection_MongoDB_Taskwise\Backend\routes\addons.py", line 133, in threat_timeline_api
+    "data": threat_timeline(_filters(), interval=interval),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\OneDrive\Desktop\AI_Assisted_Threat_Detection_MongoDB_Taskwise\Backend\services\addon_service.py", line 74, in threat_timeline
+    return aggregate_events(pipeline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\OneDrive\Desktop\AI_Assisted_Threat_Detection_MongoDB_Taskwise\Backend\database\queries.py", line 116, in aggregate_events
+    return list(get_db()["security_events"].aggregate(pipeline))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\collection.py", line 3038, in aggregate
+    return self._aggregate(
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\_csot.py", line 125, in csot_wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\collection.py", line 2935, in _aggregate
+    return self._database.client._retryable_read(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\mongo_client.py", line 2076, in _retryable_read
+    return self._retry_internal(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\_csot.py", line 125, in csot_wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\mongo_client.py", line 2038, in _retry_internal
+    ).run()
+      ^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\mongo_client.py", line 2811, in run
+    res = self._read() if self._is_read else self._write()
+          ^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\mongo_client.py", line 3027, in _read
+    self._server = self._get_server()
+                   ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\mongo_client.py", line 2975, in _get_server
+    return self._client._select_server(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\mongo_client.py", line 1851, in _select_server
+    server = topology.select_server(
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\topology.py", line 428, in select_server
+    server = self._select_server(
+             ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\topology.py", line 402, in _select_server
+    servers = self.select_servers(
+              ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\topology.py", line 298, in select_servers
+    server_descriptions = self._select_servers_loop(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aj\AppData\Local\Programs\Python\Python311\Lib\site-packages\pymongo\synchronous\topology.py", line 359, in _select_servers_loop
+    raise ServerSelectionTimeoutError(
+pymongo.errors.ServerSelectionTimeoutError: localhost:27017: [WinError 10061] No connection could be made because the target machine actively refused it (configured timeouts: socketTimeoutMS: 3000.0ms, connectTimeoutMS: 3000.0ms), Timeout: 3.0s, Topology Description: <TopologyDescription id: 6a74a6b7e485400eccd3b6b3, topology_type: Unknown, servers: [<ServerDescription ('localhost', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('localhost:27017: [WinError 10061] No connection could be made because the target machine actively refused it (configured timeouts: socketTimeoutMS: 3000.0ms, connectTimeoutMS: 3000.0ms)')>]>
+2026-08-06 20:58:43,337 | INFO | ThreatDetection | GET /api/analytics/threat-timeline 500 3078.44ms request_id=a429fb0f-9ef3-46af-8ce7-4855c11eb51d
+2026-08-06 20:58:55,839 | INFO | ThreatDetection | GET / 200 0.21ms request_id=558e7640-01b7-4567-9b55-e60e853bc265
