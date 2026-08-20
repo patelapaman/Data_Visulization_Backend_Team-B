@@ -1,11 +1,8 @@
 import os
 from dotenv import load_dotenv
 
-from pathlib import Path
-
-# Load environment variables from Backend/.env when running locally. Production
-# environments should provide these values through their secret manager.
-load_dotenv(Path(__file__).resolve().parent / ".env")
+# Load environment variables from .env
+load_dotenv()
 
 class Config:
     """
@@ -13,36 +10,26 @@ class Config:
     """
 
     # Flask Settings
-    SECRET_KEY = os.getenv("SECRET_KEY", "change-me-in-production")
+    SECRET_KEY = os.getenv("SECRET_KEY", "threat_detection_secret_key")
 
     # MongoDB Settings
-    MONGO_URI = os.getenv("MONGO_URI", "mongodb://localhost:27017/")
+    MONGO_URI = os.getenv(
+        "MONGO_URI",
+        "mongodb://localhost:27017/"
+    )
 
-    DATABASE_NAME = os.getenv("DATABASE_NAME", "ThreatDetectionDB")
+    DATABASE_NAME = os.getenv("DATABASE_NAME", os.getenv("MONGO_DB", "ThreatDetectionDB"))
+
+    REQUIRE_MONGODB = os.getenv("REQUIRE_MONGODB", "True").lower() == "true"
+    AUTO_SEED_MONGODB = os.getenv("AUTO_SEED_MONGODB", "True").lower() == "true"
+    FORCE_SEED_MONGODB = os.getenv("FORCE_SEED_MONGODB", "False").lower() == "true"
 
     # Debug Mode
-    DEBUG = os.getenv("DEBUG", "False").lower() == "true"
+    DEBUG = os.getenv("DEBUG", "True").lower() == "true"
 
-    # API and operational settings
+    # API Settings
     API_TITLE = "AI-Assisted Threat Detection Dashboard"
-    API_VERSION = os.getenv("API_VERSION", "2.0.0")
-    CORS_ORIGINS = os.getenv("CORS_ORIGINS", "*")
-    LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO").upper()
-    LOG_FILE = os.getenv(
-        "LOG_FILE",
-        str(Path(__file__).resolve().parent / "logs" / "application.log"),
-    )
-    EXPORT_FOLDER = os.getenv(
-        "EXPORT_FOLDER",
-        str(Path(__file__).resolve().parent / "outputs"),
-    )
-    MAX_PAGE_SIZE = int(os.getenv("MAX_PAGE_SIZE", "500"))
-    MONGO_SERVER_SELECTION_TIMEOUT_MS = int(
-        os.getenv("MONGO_SERVER_SELECTION_TIMEOUT_MS", "3000")
-    )
-    MONGO_CONNECT_TIMEOUT_MS = int(
-        os.getenv("MONGO_CONNECT_TIMEOUT_MS", "3000")
-    )
+    API_VERSION = "1.0.0"
 
     # Upload Folder (Optional)
     UPLOAD_FOLDER = "data"

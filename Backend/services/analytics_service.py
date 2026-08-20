@@ -3,7 +3,6 @@ from database.queries import (
     get_high_risk_assets,
     get_features
 )
-from services.addon_service import overview_analytics
 
 
 def get_dashboard_analytics():
@@ -20,8 +19,7 @@ def get_dashboard_analytics():
     analytics = {
         "summary": summary,
         "high_risk_assets": high_risk_assets,
-        "feature_count": len(engineered_features),
-        "event_analytics": overview_analytics(),
+        "feature_count": len(engineered_features)
     }
 
     return analytics
