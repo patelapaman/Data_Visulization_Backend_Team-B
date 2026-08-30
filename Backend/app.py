@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import os
 from flask import Flask, jsonify
 from flask_cors import CORS
@@ -107,3 +108,462 @@ if __name__ == "__main__":
         port=5000,
         debug=True
     )
+=======
+
+"""
+AI-Assisted Threat Detection Dashboard
+Backend Application
+
+Main Flask application.
+
+This file:
+- Creates the Flask application
+- Configures CORS
+- Connects MongoDB
+- Registers API routes
+- Provides health and database status endpoints
+"""
+
+import os
+
+from flask import Flask, jsonify
+from flask_cors import CORS
+from dotenv import load_dotenv
+
+from database.mongodb import (
+    connect_db,
+    get_database
+)
+
+# ---------------------------------------------------------
+# Load Environment Variables
+# ---------------------------------------------------------
+
+load_dotenv()
+
+
+# ---------------------------------------------------------
+# Create Flask Application
+# ---------------------------------------------------------
+
+app = Flask(__name__)
+
+CORS(app)
+
+
+# ---------------------------------------------------------
+# Configuration
+# ---------------------------------------------------------
+
+app.config["JSON_SORT_KEYS"] = False
+
+
+# ---------------------------------------------------------
+# Register Routes
+# ---------------------------------------------------------
+
+# Existing routes
+try:
+    from routes.assets import assets_bp
+    app.register_blueprint(assets_bp)
+except ImportError as e:
+    print(f"Warning: Assets route not loaded: {e}")
+
+
+try:
+    from routes.vulnerabilities import vulnerabilities_bp
+    app.register_blueprint(vulnerabilities_bp)
+except ImportError as e:
+    print(
+        f"Warning: Vulnerabilities route not loaded: {e}"
+    )
+
+
+try:
+    from routes.threats import threats_bp
+    app.register_blueprint(threats_bp)
+except ImportError as e:
+    print(f"Warning: Threats route not loaded: {e}")
+
+
+try:
+    from routes.incidents import incidents_bp
+    app.register_blueprint(incidents_bp)
+except ImportError as e:
+    print(
+        f"Warning: Existing incidents route not loaded: {e}"
+    )
+
+
+try:
+    from routes.dashboard import dashboard_bp
+    app.register_blueprint(dashboard_bp)
+except ImportError as e:
+    print(
+        f"Warning: Dashboard route not loaded: {e}"
+    )
+
+
+# ---------------------------------------------------------
+# Analytics Routes
+# ---------------------------------------------------------
+
+try:
+    from routes.analytics import analytics_bp
+
+    app.register_blueprint(
+        analytics_bp
+    )
+
+except ImportError as e:
+
+    print(
+        f"Warning: Analytics route not loaded: {e}"
+    )
+
+
+# ---------------------------------------------------------
+# Export Route
+# ---------------------------------------------------------
+
+try:
+    from routes.export import export_bp
+
+    app.register_blueprint(
+        export_bp
+    )
+
+except ImportError as e:
+
+    print(
+        f"Warning: Export route not loaded: {e}"
+    )
+
+
+# ---------------------------------------------------------
+# Prediction Routes
+# ---------------------------------------------------------
+
+try:
+    from routes.prediction_routes import prediction_bp
+
+    app.register_blueprint(
+        prediction_bp
+    )
+
+except ImportError as e:
+
+    print(
+        f"Warning: Prediction route not loaded: {e}"
+    )
+
+
+# ---------------------------------------------------------
+# Anomaly Routes
+# ---------------------------------------------------------
+
+try:
+    from routes.anomaly_routes import anomaly_bp
+
+    app.register_blueprint(
+        anomaly_bp
+    )
+
+except ImportError as e:
+
+    print(
+        f"Warning: Anomaly route not loaded: {e}"
+    )
+
+
+# ---------------------------------------------------------
+# Milestone 3 Routes
+# ---------------------------------------------------------
+
+try:
+    from routes.risk_routes import risk_bp
+
+    app.register_blueprint(
+        risk_bp
+    )
+
+except ImportError as e:
+
+    print(
+        f"Warning: Risk route not loaded: {e}"
+    )
+
+
+try:
+    from routes.incident_routes import incident_bp
+
+    app.register_blueprint(
+        incident_bp
+    )
+
+except ImportError as e:
+
+    print(
+        f"Warning: Incident service route not loaded: {e}"
+    )
+
+
+try:
+    from routes.intelligence_routes import intelligence_bp
+
+    app.register_blueprint(
+        intelligence_bp
+    )
+
+except ImportError as e:
+
+    print(
+        "Warning: Intelligence route "
+        f"not loaded: {e}"
+    )
+
+
+# ---------------------------------------------------------
+# Health Check
+# ---------------------------------------------------------
+
+@app.route(
+    "/",
+    methods=["GET"]
+)
+def home():
+
+    return jsonify({
+        "success": True,
+        "application":
+            "AI-Assisted Threat Detection Dashboard",
+        "status": "running",
+        "message":
+            "Backend API is running successfully"
+    })
+
+
+# ---------------------------------------------------------
+# API Health Check
+# ---------------------------------------------------------
+
+@app.route(
+    "/api/health",
+    methods=["GET"]
+)
+def health():
+
+    return jsonify({
+        "success": True,
+        "status": "healthy",
+        "service": "Threat Detection Backend"
+    })
+
+
+# ---------------------------------------------------------
+# MongoDB Health Check
+# ---------------------------------------------------------
+
+@app.route(
+    "/api/health/database",
+    methods=["GET"]
+)
+def database_health():
+
+    try:
+
+        connected = connect_db()
+
+        if connected:
+
+            db = get_database()
+
+            return jsonify({
+                "success": True,
+                "status": "connected",
+                "database":
+                    db.name
+            }), 200
+
+        return jsonify({
+            "success": False,
+            "status": "disconnected",
+            "message":
+                "MongoDB connection failed"
+        }), 503
+
+    except Exception as e:
+
+        return jsonify({
+            "success": False,
+            "status": "error",
+            "message": str(e)
+        }), 500
+
+
+# ---------------------------------------------------------
+# API Information
+# ---------------------------------------------------------
+
+@app.route(
+    "/api",
+    methods=["GET"]
+)
+def api_information():
+
+    return jsonify({
+        "success": True,
+        "application":
+            "AI-Assisted Threat Detection Dashboard",
+
+        "version":
+            "3.0.0",
+
+        "endpoints": {
+
+            "health":
+                "/api/health",
+
+            "database_health":
+                "/api/health/database",
+
+            "analytics":
+                "/api/analytics/dashboard",
+
+            "risk":
+                "/api/risk",
+
+            "predictions":
+                "/api/predictions",
+
+            "anomalies":
+                "/api/anomalies",
+
+            "incidents":
+                "/api/incidents",
+
+            "threat_intelligence":
+                "/api/intelligence"
+        }
+    })
+
+
+# ---------------------------------------------------------
+# Error Handlers
+# ---------------------------------------------------------
+
+@app.errorhandler(404)
+def not_found(error):
+
+    return jsonify({
+        "success": False,
+        "error": "Endpoint not found"
+    }), 404
+
+
+@app.errorhandler(405)
+def method_not_allowed(error):
+
+    return jsonify({
+        "success": False,
+        "error": "HTTP method not allowed"
+    }), 405
+
+
+@app.errorhandler(500)
+def internal_server_error(error):
+
+    return jsonify({
+        "success": False,
+        "error": "Internal server error"
+    }), 500
+
+
+# ---------------------------------------------------------
+# Application Startup
+# ---------------------------------------------------------
+
+if __name__ == "__main__":
+
+    print(
+        "\n========================================"
+    )
+
+    print(
+        " AI-Assisted Threat Detection Dashboard"
+    )
+
+    print(
+        " Backend API"
+    )
+
+    print(
+        "========================================"
+    )
+
+    print(
+        "Starting Flask server..."
+    )
+
+    print(
+        "API: http://127.0.0.1:5000"
+    )
+
+    print(
+        "Health: "
+        "http://127.0.0.1:5000/api/health"
+    )
+
+    print(
+        "========================================\n"
+    )
+
+    # Check database without preventing
+    # Flask from starting if MongoDB is unavailable.
+    try:
+
+        if connect_db():
+
+            print(
+                "✓ MongoDB connection successful"
+            )
+
+        else:
+
+            print(
+                "⚠ MongoDB is not connected"
+            )
+
+            print(
+                "  Check your .env configuration."
+            )
+
+    except Exception as e:
+
+        print(
+            "⚠ MongoDB check failed:"
+        )
+
+        print(e)
+
+    # Start Flask
+    app.run(
+        host=os.getenv(
+            "FLASK_HOST",
+            "127.0.0.1"
+        ),
+
+        port=int(
+            os.getenv(
+                "FLASK_PORT",
+                5000
+            )
+        ),
+
+        debug=os.getenv(
+            "FLASK_DEBUG",
+            "True"
+        ).lower() == "true"
+    )
+
+>>>>>>> fef0746 (Milestone 3)
